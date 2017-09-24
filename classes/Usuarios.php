@@ -59,22 +59,56 @@ class Usuarios
         $sql = new Sql();
         $results = $sql->select('SELECT * FROM USUARIOS WHERE ID = :ID', array(
             ':ID'=>$id
-        ));
-        
-        if (count($results)>0)
-        {
-            $row = $results[0];
-            $this->setID($row['ID']);
-            $this->setUsuario($row['USUARIO']);
-            $this->setNome($row['NOME']);
-            $this->setSsenha($row['SENHA']);
-            $this->setNivel($row['NIVEL']);
-            $this->setId_Perfil($row['ID_PERFIL']);
-            $this->setData_Cad(new DateTime($row['DATA_CAD']));
-            $this->setDATA_ALT(new DateTime($row['DATA_ALT']));
-        }
+        ));        
+        if (count($results)>0)        
+            $this->setDados($results[0]);                    
     }
     
+    function setDados($dados)
+    {      
+        $this->setUsuario($dados['USUARIO']);
+        $this->setNome($dados['NOME']);
+        $this->setSsenha($dados['SENHA']);
+      //  $this->setNivel($dados['NIVEL']);
+      //  $this->setId_Perfil($dados['ID_PERFIL']);
+      //  $this->setData_Cad(new DateTime($dados['DATA_CAD']));
+      //  $this->setDATA_ALT(new DateTime($dados['DATA_ALT']));
+    }
+
+    public function __construct($usuario = '', $nome = '', $senha = '') 
+    {
+        $this->setUsuario($usuario);
+        $this->setNome($nome);
+        $this->setSsenha($senha);      
+    }
+    
+    function update($usuario, $nome, $senha)
+    {
+        $this->setUsuario($usuario);
+        $this->setNome($nome);
+        $this->setSsenha($senha);
+        
+        $sql = new Sql();
+        $results = $sql->query('UPDATE USUARIOS SET USUARIO = :USUARIO, NOME = :NOME, SENHA = :SENHA WHERE ID = :ID', array(
+            ':USUARIO'=> $this->getUsuario(),
+            ':NOME'=> $this->getNome(),
+            ':SENHA'=> $this->getSenha(),
+            ':ID'=> $this->getID()    
+        ));
+    }
+            
+    function inserir() //Não está funcionando
+    {
+        $sql = new Sql();
+        $results = $sql->select('CALL spInserirUsuario(:USUARIO, :NOME, :SENHA)', array(                   
+        ':USUARIO'=> $this->getUsuario(),
+        ':NOME'=> $this->getNome(),
+        ':SENHA'=> $this->getSenha()       
+        ));
+        if (count($results)>0)
+            $this->setDados($results[0]);
+    }
+
     static function search($usuario)
     {
         $consulta = new Sql();
@@ -91,39 +125,29 @@ class Usuarios
            ':SENHA'=> $senha            
         ));
         if (count($consulta)>0)
-        {
-            $row = $consulta[0];
-            $this->setID($row['ID']);
-            $this->setUsuario($row['USUARIO']);
-            $this->setNome($row['NOME']);
-            $this->setSsenha($row['SENHA']);
-            $this->setNivel($row['NIVEL']);
-            $this->setId_Perfil($row['ID_PERFIL']);
-            $this->setData_Cad(new DateTime($row['DATA_CAD']));
-            $this->setDATA_ALT(new DateTime($row['DATA_ALT']));
-        }
+            $this->setDados ($consulta[0]);
         else
             throw new Exception('Usuário e/ou senha inválido');
     
     }
 
-    static function listaUsuarios() //Traz uma lista de usuarios
+static function listaUsuarios() //Traz uma lista de usuarios
     {
         $consulta = new Sql();
         return $consulta->select('SELECT * FROM USUARIOS ORDER BY NOME');
     }
 
-        public function __toString() 
-    {
-        return json_encode(array(
-            'ID'=> $this->getID(),
-            'USUARIO'=> $this->getUsuario(),
-            'NOME'=> $this->getNome(),
-            'SENHA'=> $this->getSenha(),
-            'NIVEL'=> $this->getNivel(),
-            'ID_PERFIL'=> $this->getID_Perfil(),
-            'DATA_CAD'=> $this->getData_Cad()->format('d/m/Y H:i:s'),
-            'DATA_ALT'=> $this->getData_Alt()->format('d/m/Y H:i:s')
-        ))  ;
-    }
+public function __toString() 
+{
+    return json_encode(array(
+        'ID'=> $this->getID(),
+        'USUARIO'=> $this->getUsuario(),
+        'NOME'=> $this->getNome(),
+        'SENHA'=> $this->getSenha()
+      //  'NIVEL'=> $this->getNivel(),
+      //  'ID_PERFIL'=> $this->getID_Perfil(),
+      //  'DATA_CAD'=> $this->getData_Cad()->format('d/m/Y H:i:s'),
+       // 'DATA_ALT'=> $this->getData_Alt()->format('d/m/Y H:i:s')
+    ));
+}
 }

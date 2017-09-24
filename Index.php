@@ -7,16 +7,28 @@ require_once 'config.php';
 //$produto = new Produtos();
 //$produto->loadById(2);
 //echo $produto;
-
-//$user = new Usuarios();
-//$user->loadById(2);
+/*==================================================================================*/
+//Rotina para inserção de usuário
+//$user = new Usuarios('MariaJo', 'Maria Joaquina', '123');
+//$user->inserir();
 //echo $user;
 
-//$lista = Usuarios::getList();
+/*==================================================================================*/
+//Rotina para atualizar usuário
+$usuario = new Usuarios();
+$usuario->loadById(4);
+$usuario->update('MariaJo', 'Maria Joaquina', '123');
+echo $usuario;
+
+
+//$user->loadById(3);
+//echo $user;
+
+//$lista = Usuarios::listaUsuarios();
 //echo json_encode($lista);
 
-$busca = Usuarios::search('t');
-echo json_encode($busca);
+//$busca = Usuarios::search('t');
+//echo json_encode($busca);
 
 
 ?>
