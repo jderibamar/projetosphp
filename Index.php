@@ -15,12 +15,20 @@ require_once 'config.php';
 
 /*==================================================================================*/
 //Rotina para atualizar usuário
+//$usuario = new Usuarios();
+//$usuario->loadById(4);
+//$usuario->update('MariaJo', 'Maria Joaquina', '123');
+//echo $usuario;
+
+/*=========================Rotina para deletar um usuário==============================*/
+
 $usuario = new Usuarios();
 $usuario->loadById(4);
-$usuario->update('MariaJo', 'Maria Joaquina', '123');
+$usuario->delete();
 echo $usuario;
 
-
+/*====================Seleciona um usuário====================================*/
+//$user = new Usuarios();
 //$user->loadById(3);
 //echo $user;
 

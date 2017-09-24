@@ -69,10 +69,10 @@ class Usuarios
         $this->setUsuario($dados['USUARIO']);
         $this->setNome($dados['NOME']);
         $this->setSsenha($dados['SENHA']);
-      //  $this->setNivel($dados['NIVEL']);
-      //  $this->setId_Perfil($dados['ID_PERFIL']);
-      //  $this->setData_Cad(new DateTime($dados['DATA_CAD']));
-      //  $this->setDATA_ALT(new DateTime($dados['DATA_ALT']));
+        $this->setNivel($dados['NIVEL']);
+        $this->setId_Perfil($dados['ID_PERFIL']);
+        $this->setData_Cad(new DateTime($dados['DATA_CAD']));
+        $this->setDATA_ALT(new DateTime($dados['DATA_ALT']));
     }
 
     public function __construct($usuario = '', $nome = '', $senha = '') 
@@ -82,6 +82,22 @@ class Usuarios
         $this->setSsenha($senha);      
     }
     
+    function delete()
+    {
+        $sql = new Sql();
+        $sql->query('DELETE FROM USUARIOS WHERE ID =  :ID', array(
+            ':ID'=> $this->getID()
+        ));
+        $this->setID(0);
+        $this->setUsuario('');
+        $this->setNome('');
+        $this->setSsenha('');
+        $this->setNivel('');
+        $this->setId_Perfil('');
+        $this->setData_Cad(new DateTime());
+        $this->setDATA_ALT(new DateTime());  
+    }
+            
     function update($usuario, $nome, $senha)
     {
         $this->setUsuario($usuario);
@@ -89,11 +105,11 @@ class Usuarios
         $this->setSsenha($senha);
         
         $sql = new Sql();
-        $results = $sql->query('UPDATE USUARIOS SET USUARIO = :USUARIO, NOME = :NOME, SENHA = :SENHA WHERE ID = :ID', array(
+        $results = $sql->query('UPDATE USUARIOS SET USUARIO = :USUARIO, NOME = :NOME, SENHA = :SENHA WHERE USUARIO = :USUARIO', array(
             ':USUARIO'=> $this->getUsuario(),
             ':NOME'=> $this->getNome(),
-            ':SENHA'=> $this->getSenha(),
-            ':ID'=> $this->getID()    
+            ':SENHA'=> $this->getSenha()
+            //':ID'=> $this->getID()    
         ));
     }
             
@@ -143,11 +159,11 @@ public function __toString()
         'ID'=> $this->getID(),
         'USUARIO'=> $this->getUsuario(),
         'NOME'=> $this->getNome(),
-        'SENHA'=> $this->getSenha()
-      //  'NIVEL'=> $this->getNivel(),
-      //  'ID_PERFIL'=> $this->getID_Perfil(),
-      //  'DATA_CAD'=> $this->getData_Cad()->format('d/m/Y H:i:s'),
-       // 'DATA_ALT'=> $this->getData_Alt()->format('d/m/Y H:i:s')
+        'SENHA'=> $this->getSenha(),
+        'NIVEL'=> $this->getNivel(),
+        'ID_PERFIL'=> $this->getID_Perfil(),
+        'DATA_CAD'=> $this->getData_Cad()->format('d/m/Y H:i:s'),
+        'DATA_ALT'=> $this->getData_Alt()->format('d/m/Y H:i:s')
     ));
 }
 }
